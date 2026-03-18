@@ -44,7 +44,7 @@ TaskStatus NormalizeBField(MeshData<Real> *md, ParameterInput *pin);
  * B field initializations.
  * TO ADD A FIELD:
  * 1. add its internal name to the enum below
- * 2. Implement the template specialization for your field, either from seed_a<> or seed_b<>
+ * 2. Implement the template specialization for your field, from seed_a<>, seed_avec<>, or seed_b<>
  * 3. Add your specialization to the `if` statements in SeedBField
  * 4. If you used seed_b<>, add your case where SeedBFieldType<> selects direct initialization
  * 5. If you added arguments, make sure the calls in SeedBFieldType<> are up-to-date
@@ -52,7 +52,7 @@ TaskStatus NormalizeBField(MeshData<Real> *md, ParameterInput *pin);
 
 // Internal representation of the field initialization preference, used for templating
 enum BSeedType{constant, monopole, orszag_tang, orszag_tang_a, wave, shock_tube,
-                sane, mad, mad_quadrupole, r3s3, r5s5, gaussian, bz_monopole, vertical, r1s2};
+                sane, mad, mad_quadrupole, r3s3, r5s5, gaussian, bz_monopole, vertical, wald, wald_vector, r1s2};
 
 #define SEEDA_ARGS GReal *x, const GReal *dxc, double rho, double rin, double min_A, double A0, double arg1, double rb
 
@@ -125,6 +125,26 @@ KOKKOS_INLINE_FUNCTION Real seed_a<BSeedType::vertical>(SEEDA_ARGS)
 }
 
 template<>
+KOKKOS_INLINE_FUNCTION Real seed_a<BSeedType::wald>(SEEDA_ARGS)
+{
+    // Uncharged Kerr black hole in an asymptotically uniform vertical field.
+    // Uses A_phi = (A0/2) * (g_{phi phi} + 2 a g_{t phi}) in KS spherical coordinates.
+    const Real a = arg1;
+    const Real r = x[1];
+    const Real sth = m::sin(x[2]);
+    const Real cth = m::cos(x[2]);
+    const Real rho2 = r * r + a * a * cth * cth;
+    return 0.5 * A0 * sth * sth *
+           (r * r + a * a - 2.0 * a * a * r * (1.0 + cth * cth) / rho2);
+}
+
+template<>
+KOKKOS_INLINE_FUNCTION Real seed_a<BSeedType::wald_vector>(SEEDA_ARGS)
+{
+    return seed_a<BSeedType::wald>(x, dxc, rho, rin, min_A, A0, arg1, rb);
+}
+
+template<>
 KOKKOS_INLINE_FUNCTION Real seed_a<BSeedType::r1s2>(SEEDA_ARGS)
 {
     return A0 * (x[1] * x[1] / 2. + x[1] * rb / 2.) * m::sin(x[2]) * m::sin(x[2]);
@@ -137,7 +157,37 @@ KOKKOS_INLINE_FUNCTION Real seed_a<BSeedType::orszag_tang_a>(SEEDA_ARGS)
                         + std::cos(x[2] + arg1));
 }
 
+#define SEEDAVEC_ARGS GReal *x, const GReal *dxc, double rho, double rin, double min_A, double A0, double arg1, double rb, \
+                      double &A1, double &A2, double &A3
+
+// Default vector potential path for seed_a<> fields: (A_r, A_theta, A_phi) = (0, 0, A_phi).
+template<BSeedType T>
+KOKKOS_INLINE_FUNCTION void seed_avec(SEEDAVEC_ARGS)
+{
+    A1 = 0.;
+    A2 = 0.;
+    A3 = seed_a<T>(x, dxc, rho, rin, min_A, A0, arg1, rb);
+}
+
+template<>
+KOKKOS_INLINE_FUNCTION void seed_avec<BSeedType::wald_vector>(SEEDAVEC_ARGS)
+{
+    // Kerr-Schild Wald 3-vector potential.
+    // Optional A_theta gauge term is controlled by rb (b_field/A2), defaulting to 0.
+    const Real a = arg1;
+    const Real r = x[1];
+    const Real sth = m::sin(x[2]);
+    const Real cth = m::cos(x[2]);
+    const Real rho2 = r * r + a * a * cth * cth;
+
+    A1 = 0.5 * A0 * a * (-sth * sth + 2.0 * r * (1.0 + cth * cth) / rho2);
+    A2 = A0 * rb * r * sth * cth / rho2;
+    A3 = 0.5 * A0 * sth * sth *
+         (r * r + a * a - 2.0 * a * a * r * (1.0 + cth * cth) / rho2);
+}
+
 #undef SEEDA_ARGS
+#undef SEEDAVEC_ARGS
 #define SEEDB_ARGS GReal *x, GReal gdet, double k1, double k2, double k3, double phase, \
                     double amp_B1, double amp_B2, double amp_B3, \
                     double amp2_B1, double amp2_B2, double amp2_B3, \

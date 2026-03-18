@@ -218,7 +218,8 @@ TaskStatus SeedBFieldType(MeshBlockData<Real> *rc, ParameterInput *pin, IndexDom
         Real A0 = pin->GetOrAddReal("b_field", "A0", 0.);
         Real min_A = pin->GetOrAddReal("b_field", "min_A", 0.2);
         // Init-specific loads
-        Real a, rin, rmax, gam, kappa, rho_norm, arg1, n, rs, rb;
+        Real a = 0., rin = 0., rmax = 0., gam = 0., kappa = 0., rho_norm = 0.;
+        Real arg1 = 0., n = 0., rs = 0., rb = 0.;
         Real tilt = 0; // Needs to be initialized
         switch (Seed) {
         case BSeedType::sane:
@@ -236,6 +237,15 @@ TaskStatus SeedBFieldType(MeshBlockData<Real> *rc, ParameterInput *pin, IndexDom
             gam = pmb->packages.Get("GRMHD")->Param<Real>("gamma");
             rho_norm = pmb->packages.Get("GRMHD")->Param<Real>("rho_norm");
             a = G.coords.get_a();
+            break;
+        case BSeedType::wald:
+            // Pass spin through arg1 for the seed_a<> specialization.
+            arg1 = G.coords.get_a();
+            break;
+        case BSeedType::wald_vector:
+            // Pass spin through arg1 and optional A_theta gauge coefficient through rb.
+            arg1 = G.coords.get_a();
+            rb = pin->GetOrAddReal("b_field", "A2", 0.0);
             break;
         case BSeedType::orszag_tang_a:
             A0 = pin->GetReal("orszag_tang", "tscale");
@@ -301,11 +311,13 @@ TaskStatus SeedBFieldType(MeshBlockData<Real> *rc, ParameterInput *pin, IndexDom
                     }
                 }
 
-                Real Aphi = seed_a<Seed>(Xmidplane, dxc, rho_av, rin, min_A, A0, arg1, rb);
+                Real A1_seed = 0., A2_seed = 0., A3_seed = 0.;
+                seed_avec<Seed>(Xmidplane, dxc, rho_av, rin, min_A, A0, arg1, rb,
+                                A1_seed, A2_seed, A3_seed);
 
                 if (tilt != 0.0) {
                     // This is *covariant* A_mu of an untilted disk
-                    const double A_untilt_lower[GR_DIM] = {0., 0., 0., Aphi};
+                    const double A_untilt_lower[GR_DIM] = {0., A1_seed, A2_seed, A3_seed};
                     // Raise to contravariant vector, since rotate_polar_vec will need that.
                     // Note we have to do this in the midplane!
                     // The coord_to_native calculation involves an iterative solve for MKS/FMKS
@@ -329,8 +341,10 @@ TaskStatus SeedBFieldType(MeshBlockData<Real> *rc, ParameterInput *pin, IndexDom
                     VLOOP A(v, k, j, i) = A_tilt_lower[1 + v];
                 } else {
                     // Some problems rely on a very accurate A->B, which the rotation lacks.
-                    // So, we preserve exact values in the no-tilt case.
-                    A(V3, k, j, i) = Aphi;
+                    // So, we preserve exact values from the seed in the no-tilt case.
+                    A(V1, k, j, i) = A1_seed;
+                    A(V2, k, j, i) = A2_seed;
+                    A(V3, k, j, i) = A3_seed;
                 }
             }
         );
@@ -444,6 +458,10 @@ TaskStatus SeedBField(MeshData<Real> *md, ParameterInput *pin)
             status = SeedBFieldType<BSeedType::bz_monopole>(rc, pin);
         } else if (b_field_type == "vertical") {
             status = SeedBFieldType<BSeedType::vertical>(rc, pin);
+        } else if (b_field_type == "wald") {
+            status = SeedBFieldType<BSeedType::wald>(rc, pin);
+        } else if (b_field_type == "wald_vector") {
+            status = SeedBFieldType<BSeedType::wald_vector>(rc, pin);
         } else if (b_field_type == "r1s2") {
             status = SeedBFieldType<BSeedType::r1s2>(rc, pin);
         } else if (b_field_type == "orszag_tang") {
