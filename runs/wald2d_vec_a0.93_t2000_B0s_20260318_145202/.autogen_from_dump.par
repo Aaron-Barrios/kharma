@@ -1,0 +1,294 @@
+#------------------------- PAR_DUMP -------------------------
+<parthenon/job>
+problem_id = torus 
+<parthenon/mesh>
+nx1                         = 128                
+nx2                         = 128                
+nx3                         = 1                  
+nghost                      = 4                  # Updated during run time
+refinement_in_one_min_nbufs = 64                 # Default value added at run time
+x1max                       = 3.912023005428146  # Default value added at run time
+x1min                       = 0.1514402374987327 # Default value added at run time
+x2min                       = 0                  # Default value added at run time
+x2max                       = 1                  # Default value added at run time
+x3min                       = 0                  # Default value added at run time
+x3max                       = 6.2831853071795862 # Default value added at run time
+refinement                  = none               # Default value added at run time
+ix1_bc                      = user               # Updated during run time
+ox1_bc                      = user               # Updated during run time
+ix2_bc                      = user               # Updated during run time
+ox2_bc                      = user               # Updated during run time
+ix3_bc                      = periodic           # Updated during run time
+ox3_bc                      = periodic           # Updated during run time
+x1rat                       = 1                  # Default value added at run time
+x2rat                       = 1                  # Default value added at run time
+x3rat                       = 1                  # Default value added at run time
+multigrid                   = false              # Default value added at run time
+num_threads                 = 1                  # Default value added at run time
+pack_size                   = -1                 # Default value added at run time
+restart_x1min               = -1                 # Default value added at run time
+restart_x1max               = -1                 # Default value added at run time
+<parthenon/meshblock>
+nx1 = 128 
+nx2 = 64  
+nx3 = 1   
+<coordinates>
+base                      = spherical_ks       
+transform                 = fmks               
+r_out                     = 50                 
+a                         = 0.93               
+hslope                    = 0.3                
+mks_smooth                = 0.5                
+poly_xt                   = 0.82               
+poly_alpha                = 14.0               
+ext_g                     = 0                  # Default value added at run time
+spherical                 = 1                  # Updated during run time
+r_eh                      = 1.367559518989782  # Updated during run time
+r_in                      = 1.1635087655377905 # Default value added at run time
+domain_intersects_eh      = 1                  # Updated during run time
+connection_average_points = 1                  # Default value added at run time
+correct_connections       = 0                  # Default value added at run time
+<parthenon/time>
+tlim                      = 2000                   
+nlim                      = -1                     
+integrator                = vl2                    
+recv_bdry_buf_timeout_sec = -1                     # Default value added at run time
+dt_min                    = 1.0000000000000001e-05 # Default value added at run time
+dt                        = 1.0000000000000001e-05 # Default value added at run time
+max_dt_increase           = 2                      # Default value added at run time
+start_dt_light            = 0                      # Default value added at run time
+use_dt_light              = 0                      # Default value added at run time
+use_dt_light_phase_speed  = 0                      # Default value added at run time
+start_time                = 0                      # Default value added at run time
+ncycle                    = 0                      # Default value added at run time
+ncycle_out                = 1                      # Default value added at run time
+ncycle_out_mesh           = 0                      # Default value added at run time
+<debug>
+verbose      = 1 
+extra_checks = 1 
+flag_verbose = 0 
+<GRMHD>
+cfl            = 0.9                  
+gamma          = 1.666667             
+reconstruction = weno5                
+implicit       = 0                    # Default value added at run time
+refine_tol     = 0.5                  # Default value added at run time
+derefine_tol   = 0.050000000000000003 # Default value added at run time
+sync_utop_seed = 1                    # Default value added at run time
+<b_field>
+solver             = flux_ct             
+type               = wald_vector         
+beta_min           = 1000                
+A0                 = 1.0                  # Added from command line
+A2                 = 0.0                  # Added from command line
+initial_cleanup    = 0                   # Default value added at run time
+fix_polar_flux     = 1                   # Default value added at run time
+fix_flux_x1        = 0                   # Default value added at run time
+fix_flux_inner_x1  = 0                   # Default value added at run time
+fix_flux_outer_x1  = 0                   # Default value added at run time
+fix_flux_x2        = 0                   # Default value added at run time
+fix_flux_inner_x2  = 0                   # Default value added at run time
+fix_flux_outer_x2  = 0                   # Default value added at run time
+use_old_flux_fix   = 0                   # Default value added at run time
+disable_flux_ct    = 0                   # Default value added at run time
+kill_on_large_divb = 1                   # Default value added at run time
+kill_on_divb_over  = 0.001               # Default value added at run time
+implicit           = 0                   # Default value added at run time
+restart_from_prims = 0                   # Default value added at run time
+min_A              = 0.20000000000000001 # Default value added at run time
+norm               = 1                   # Default value added at run time
+legacy_norm        = 1                   # Default value added at run time
+<driver>
+type     = kharma 
+nghost   = 4      # Default value added at run time
+two_sync = 1      # Default value added at run time
+<torus>
+rin   = 6.0   
+rmax  = 12.0  
+kappa = 0.001 # Default value added at run time
+tilt  = 0     # Default value added at run time
+<perturbation>
+u_jitter         = 0.04                   
+jitter_above_rho = 1.0000000000000001e-05 # Default value added at run time
+rng_seed         = 31337                  # Default value added at run time
+serial           = 0                      # Default value added at run time
+<floors>
+rho_min_geom            = 1e-5                   
+u_min_geom              = 1e-7                   
+u_over_rho_max          = 100                    
+bsq_over_rho_max        = 100                    
+on                      = 1                      # Default value added at run time
+rho_min_const           = 9.9999999999999995e-21 # Default value added at run time
+u_min_const             = 9.9999999999999995e-21 # Default value added at run time
+use_r_char              = 0                      # Default value added at run time
+r_char                  = 10                     # Default value added at run time
+bsq_over_u_max          = 1e+20                  # Default value added at run time
+ktot_max                = 1e+20                  # Default value added at run time
+temp_adjust_u           = 0                      # Default value added at run time
+adjust_k                = 1                      # Default value added at run time
+gamma_max               = 50                     # Default value added at run time
+radius_dependent_floors = 0                      # Default value added at run time
+floors_switch_r         = 50                     # Default value added at run time
+use_rho_to_slow         = 0                      # Default value added at run time
+frame                   = normal                 # Default value added at run time
+disable_call            = 0                      # Default value added at run time
+<parthenon/output0>
+file_type               = hdf5                      
+dt                      = 10.0                      
+single_precision_output = true                      
+variables               = prims, jcon, pflag, fflag 
+next_time               = 10                        # Updated during run time
+file_number             = 1                         # Updated during run time
+file_number_width       = 5                         # Default value added at run time
+use_final_label         = 1                         # Default value added at run time
+id                      = out0                      # Default value added at run time
+ghost_zones             = 0                         # Default value added at run time
+analysis_output         = 0                         # Default value added at run time
+sparse_seed_nans        = 0                         # Default value added at run time
+hdf5_compression_level  = 5                         # Default value added at run time
+data_format             = %12.5e                    # Default value added at run time
+<parthenon/output1>
+file_type               = rst    
+dt                      = 100.0  
+next_time               = 0      # Default value added at run time
+file_number             = 0      # Default value added at run time
+file_number_width       = 5      # Default value added at run time
+use_final_label         = 1      # Default value added at run time
+id                      = out1   # Default value added at run time
+ghost_zones             = 0      # Default value added at run time
+analysis_output         = 0      # Default value added at run time
+single_precision_output = 0      # Default value added at run time
+sparse_seed_nans        = 0      # Default value added at run time
+hdf5_compression_level  = 5      # Default value added at run time
+data_format             = %12.5e # Default value added at run time
+<parthenon/output2>
+file_type         = hst            
+dt                = 0.1            
+variables         = all_reductions 
+next_time         = 0              # Default value added at run time
+file_number       = 0              # Default value added at run time
+file_number_width = 5              # Default value added at run time
+use_final_label   = 1              # Default value added at run time
+id                = out2           # Default value added at run time
+ghost_zones       = 0              # Default value added at run time
+analysis_output   = 0              # Default value added at run time
+data_format       = %12.5e         # Default value added at run time
+<parthenon/output3>
+file_type               = hdf5                                                                                                                                                 
+analysis_output         = true                                                                                                                                                 
+dt                      = 1e20                                                                                                                                                 
+single_precision_output = false                                                                                                                                                
+variables               = coords.Xnative, coords.Xsph,coords.gcon, coords.gcov, coords.gdet, coords.lapse, coords.conn,coords.gcon_embed, coords.gcov_embed, coords.gdet_embed 
+next_time               = 0                                                                                                                                                    # Default value added at run time
+file_number             = 0                                                                                                                                                    # Default value added at run time
+file_number_width       = 5                                                                                                                                                    # Default value added at run time
+use_final_label         = 1                                                                                                                                                    # Default value added at run time
+id                      = out3                                                                                                                                                 # Default value added at run time
+ghost_zones             = 0                                                                                                                                                    # Default value added at run time
+sparse_seed_nans        = 0                                                                                                                                                    # Default value added at run time
+hdf5_compression_level  = 5                                                                                                                                                    # Default value added at run time
+data_format             = %12.5e                                                                                                                                               # Default value added at run time
+<parthenon/sparse>
+enable_sparse     = 0                      # Default value added at run time
+alloc_threshold   = 9.9999999999999998e-13 # Default value added at run time
+dealloc_threshold = 1e-14                  # Default value added at run time
+dealloc_count     = 5                      # Default value added at run time
+<boundaries>
+inner_x1                   = outflow    # Default value added at run time
+outer_x1                   = outflow    # Default value added at run time
+inner_x2                   = reflecting # Default value added at run time
+outer_x2                   = reflecting # Default value added at run time
+inner_x3                   = periodic   # Default value added at run time
+outer_x3                   = periodic   # Default value added at run time
+check_inflow               = 1          # Default value added at run time
+excise_polar_flux          = 0          # Default value added at run time
+zero_polar_flux            = 1          # Default value added at run time
+domain_bounds_on_conserved = 0          # Default value added at run time
+fix_corner                 = 1          # Default value added at run time
+fix_corner_inner           = 1          # Default value added at run time
+fix_corner_outer           = 0          # Default value added at run time
+check_inflow_inner_x1      = 1          # Default value added at run time
+zero_flux_inner_x1         = 0          # Default value added at run time
+excise_flux_inner_x1       = 0          # Default value added at run time
+outflow_EMHD_inner_x1      = 0          # Default value added at run time
+cancel_U3_inner_x1         = 0          # Default value added at run time
+cancel_T3_inner_x1         = 0          # Default value added at run time
+check_inflow_outer_x1      = 1          # Default value added at run time
+zero_flux_outer_x1         = 0          # Default value added at run time
+excise_flux_outer_x1       = 0          # Default value added at run time
+outflow_EMHD_outer_x1      = 0          # Default value added at run time
+cancel_U3_outer_x1         = 0          # Default value added at run time
+cancel_T3_outer_x1         = 0          # Default value added at run time
+check_inflow_inner_x2      = 0          # Default value added at run time
+zero_flux_inner_x2         = 1          # Default value added at run time
+excise_flux_inner_x2       = 0          # Default value added at run time
+outflow_EMHD_inner_x2      = 0          # Default value added at run time
+cancel_U3_inner_x2         = 0          # Default value added at run time
+cancel_T3_inner_x2         = 0          # Default value added at run time
+check_inflow_outer_x2      = 0          # Default value added at run time
+zero_flux_outer_x2         = 1          # Default value added at run time
+excise_flux_outer_x2       = 0          # Default value added at run time
+outflow_EMHD_outer_x2      = 0          # Default value added at run time
+cancel_U3_outer_x2         = 0          # Default value added at run time
+cancel_T3_outer_x2         = 0          # Default value added at run time
+check_inflow_inner_x3      = 0          # Default value added at run time
+zero_flux_inner_x3         = 0          # Default value added at run time
+excise_flux_inner_x3       = 0          # Default value added at run time
+outflow_EMHD_inner_x3      = 0          # Default value added at run time
+cancel_U3_inner_x3         = 0          # Default value added at run time
+cancel_T3_inner_x3         = 0          # Default value added at run time
+check_inflow_outer_x3      = 0          # Default value added at run time
+zero_flux_outer_x3         = 0          # Default value added at run time
+excise_flux_outer_x3       = 0          # Default value added at run time
+outflow_EMHD_outer_x3      = 0          # Default value added at run time
+cancel_U3_outer_x3         = 0          # Default value added at run time
+cancel_T3_outer_x3         = 0          # Default value added at run time
+<emhd>
+on          = 0 # Default value added at run time
+ideal_guess = 0 # Default value added at run time
+<b_cleanup>
+on = 0 # Updated during run time
+<electrons>
+on = 0 # Default value added at run time
+<wind>
+on = 0 # Default value added at run time
+<inverter>
+type                        = kastaun                # Default value added at run time
+err_tol                     = 9.9999999999999998e-13 # Default value added at run time
+iter_max                    = 25                     # Default value added at run time
+apply_floors_with_inversion = 1                      # Default value added at run time
+fix_average_neighbors       = 0                      # Default value added at run time
+fix_zero_velocity           = 0                      # Default value added at run time
+fix_atmosphere              = 1                      # Default value added at run time
+<floors_inner>
+rho_min_geom     = 1.0000000000000001e-05 # Default value added at run time
+u_min_geom       = 9.9999999999999995e-08 # Default value added at run time
+rho_min_const    = 9.9999999999999995e-21 # Default value added at run time
+u_min_const      = 9.9999999999999995e-21 # Default value added at run time
+use_r_char       = 0                      # Default value added at run time
+r_char           = 10                     # Default value added at run time
+bsq_over_rho_max = 100                    # Default value added at run time
+bsq_over_u_max   = 1e+20                  # Default value added at run time
+u_over_rho_max   = 100                    # Default value added at run time
+ktot_max         = 1e+20                  # Default value added at run time
+temp_adjust_u    = 0                      # Default value added at run time
+adjust_k         = 1                      # Default value added at run time
+gamma_max        = 50                     # Default value added at run time
+<flux>
+type                    = llf   # Default value added at run time
+reconstruction          = weno5 # Default value added at run time
+low_order_edges         = 0     # Default value added at run time
+low_order_poles         = 0     # Default value added at run time
+reconstruction_fallback = 1     # Default value added at run time
+reconstruction_floors   = 0     # Default value added at run time
+<fofc>
+on = 0 # Default value added at run time
+<ismr>
+on = 0 # Default value added at run time
+<resize_restart>
+fname_fill = none # Default value added at run time
+<blob>
+add_blob = 0 # Default value added at run time
+#------------------------- PAR_DUMP -------------------------
+<par_end>
+
