@@ -8,7 +8,6 @@ out-*.txt
 convergence.txt
 *.h5
 *.png
-*.mp4
 *.webm
 frames_*/
 logs/
